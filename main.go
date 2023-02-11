@@ -1,7 +1,8 @@
 package main
 
 import (
-	"fmt"
+	"io"
+	"net/http"
 
 	ipbuf "ipbuf/proto"
 
@@ -10,27 +11,45 @@ import (
 
 // main is the entry point for the program
 func main() {
-	var input string
+	// Get user input string from HTTP POST request
+	http.HandleFunc("/", handler)
 
-	// Get user input string
-	fmt.Print("Enter a string: ")
-	_, err := fmt.Scanln(&input)
+	// Start the HTTP server
+	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
-		fmt.Println("Error reading input: ", err)
+		panic(err)
 	}
+}
 
-	// Build the IPBuf protobuf struct
-	message := ipbuf.IPBuf{Msg: input}
+// handler is the base HTTP handler for the program
+func handler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		// Get the POST request body
+		body, err := io.ReadAll(r.Body)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
-	// Serialize the message to protobuf
-	data, err := proto.Marshal(&message)
-	fmt.Printf("Serialized data: %v. Size: %d bytes.\n", data, len(data))
+		// Build the IPBuf protobuf struct
+		message := ipbuf.IPBuf{Msg: string(body)}
 
-	// Deserialize the message from protobuf
-	var newMessage ipbuf.IPBuf
-	err = proto.Unmarshal(data, &newMessage)
-	if err != nil {
-		fmt.Println("Error unmarshalling: ", err)
+		// Serialize the message to protobuf
+		data, err := proto.Marshal(&message)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Send the serialized message to the client
+		_, err = w.Write(data)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	} else {
+		// Handle non-POST requests
+		http.Error(w, "Only POST requests are supported.", http.StatusMethodNotAllowed)
+		return
 	}
-	fmt.Printf("Deserialized message: %v", newMessage.GetMsg())
 }
