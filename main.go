@@ -31,6 +31,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// Limit the size of the POST request body to 1MB
+		if len(body) > (1024 * 1024) {
+			http.Error(w, "Request body too large.", http.StatusRequestEntityTooLarge)
+			return
+		}
+
 		// Build the IPBuf protobuf struct
 		message := ipbuf.IPBuf{Msg: string(body)}
 
