@@ -58,6 +58,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+	} else if r.Method == "OPTIONS" {
+		// Handle CORS preflight requests
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET,OPTIONS,POST")
+		w.Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,Content-Type")
+		w.Header().Set("Access-Control-Max-Age", "3600")
+
+		// Return 204 No Content
+		w.WriteHeader(http.StatusNoContent)
+		return
 	} else {
 		// Handle non-POST requests
 		http.Error(w, "Only POST requests are supported.", http.StatusMethodNotAllowed)
