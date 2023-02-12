@@ -2,7 +2,9 @@ package main
 
 import (
 	"io"
+	"log"
 	"net/http"
+	"os"
 
 	ipbuf "ipbuf/proto"
 
@@ -11,14 +13,17 @@ import (
 
 // main is the entry point for the program
 func main() {
+	listenAddr := ":8080"
+	if val, ok := os.LookupEnv("FUNCTIONS_CUSTOMHANDLER_PORT"); ok {
+		listenAddr = ":" + val
+	}
+
 	// Get user input string from HTTP POST request
-	http.HandleFunc("/", handler)
+	http.HandleFunc("/api/httptriggeripbuf", handler)
 
 	// Start the HTTP server
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		panic(err)
-	}
+	log.Printf("About to listen on %s. Go to https://127.0.0.1%s/", listenAddr, listenAddr)
+	log.Fatal(http.ListenAndServe(listenAddr, nil))
 }
 
 // handler is the base HTTP handler for the program
