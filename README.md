@@ -21,9 +21,7 @@ docker run -p 8080:8080 \
 ### Build
 
 ```bash
-set GOOS=linux
-set GOARCH=amd64
-go build main.go
+GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -trimpath main.go
 ```
 
 ### Test locally
