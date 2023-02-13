@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -74,7 +75,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	} else {
 		// Handle non-POST requests
-		http.Error(w, "Only POST requests are supported.", http.StatusMethodNotAllowed)
+		message := fmt.Sprintf("Use POST request to send data to the server. Received %s request.", r.Method)
+		http.Error(w, message, http.StatusMethodNotAllowed)
 		return
 	}
 }
