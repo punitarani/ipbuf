@@ -31,7 +31,7 @@
 </div>
 <div class="output container">
 	{#await ipbufPromise}
-		<textarea disabled>"Loading..."</textarea>
+		<textarea disabled>Loading...</textarea>
 	{:then value}
 		<textarea disabled>{value}</textarea>
 	{:catch error}
