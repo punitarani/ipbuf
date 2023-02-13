@@ -52,6 +52,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		// Set the response headers
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/protobuf")
+
 		// Send the serialized message to the client
 		_, err = w.Write(data)
 		if err != nil {
