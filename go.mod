@@ -1,4 +1,4 @@
-module ipbuf
+module github.com/punitarani/ipbuf
 
 go 1.20
 

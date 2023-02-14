@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	ipbuf "ipbuf/proto"
+	ipbuf "github.com/punitarani/ipbuf/proto"
 
 	"google.golang.org/protobuf/proto"
 )

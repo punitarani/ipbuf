@@ -3,11 +3,11 @@ package test
 import (
 	"io"
 	"io/fs"
-	"ipbuf/pkg/store"
 	"os"
 	"testing"
 
 	"github.com/ipfs/go-cid"
+	"github.com/punitarani/ipbuf/pkg/store"
 )
 
 // ipbuf.txt CID from web3.storage
