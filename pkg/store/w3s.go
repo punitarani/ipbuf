@@ -3,18 +3,18 @@ package store
 import (
 	"context"
 	"fmt"
-	"github.com/ipfs/go-cid"
 	"io/fs"
 	"net/http"
 	"os"
 
+	"github.com/ipfs/go-cid"
 	"github.com/web3-storage/go-w3s-client"
 )
 
 // W3Store is an interface for web3.storage
 type W3Store interface {
 	SaveFile(file fs.File) (cid.Cid, error)
-	GetFile(cid cid.Cid) (fs.File, error)
+	GetFile(cid cid.Cid) (fs.File, fs.FS, error)
 }
 
 // W3S is a web3.storage client
